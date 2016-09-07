@@ -5,57 +5,87 @@ using System;
 
 public class BagUIModule : BaseModule
 {
-    private List<ItemModule.ItemData> _itemData;
-    Dictionary<ItemModule.EnumMainType, ItemModule.ItemData[]> tableDic = new Dictionary<ItemModule.EnumMainType, ItemModule.ItemData[]>();
+    private List<ItemModule> _itemData;
+    Dictionary<ItemModule.EnumMainType, ItemModule[]> tableDic = new Dictionary<ItemModule.EnumMainType, ItemModule[]>();
     //int?[] tableOneID = new int?[25];//0-5的值，是数组_listItem的编号；
     //int?[] tableTwoID = new int?[25];
     //int?[] tableThreeID = new int?[25];
-    private ItemModule.ItemData[] tableOneListItem = new ItemModule.ItemData[25];
-    private ItemModule.ItemData[] tableTwoListItem = new ItemModule.ItemData[25];
-    private ItemModule.ItemData[] tableThreeListItem = new ItemModule.ItemData[25];
+    private ItemModule[] tableOneListItem = new ItemModule[25];
+    private ItemModule[] tableTwoListItem = new ItemModule[25];
+    private ItemModule[] tableThreeListItem = new ItemModule[25];
 
 
-    public void RemoveImageInfo(ItemModule.EnumMainType mainType, int num, uint count = 1)
+    //public void RemoveImageInfo(ItemModule.EnumMainType mainType, int num, uint count = 1)
+    //{
+    //    for (int i = 0; i < 25; i++)
+    //    {
+    //        if (tableDic[mainType][i] == _itemData[num] && tableDic[mainType][i].Num > 0)
+    //        {
+    //            if (tableDic[mainType][i].Num > count)
+    //            {
+    //                tableDic[mainType][i].Num -= count;
+    //            }
+    //            else
+    //            {
+    //                tableDic[mainType][i] = null;
+    //                count -= tableDic[mainType][i].Num;
+    //                RemoveImageInfo(mainType, num, count);
+    //            }
+    //        }
+    //    }
+    //}
+    public void DecreaseImageNum(ItemModule itemModule, ItemModule.EnumMainType mainType, uint count = 1)
     {
-        for (int i = 0; i < 25; i++)
+        if (itemModule._ItemData.Num > 0)
         {
-            if (tableDic[mainType][i] == _itemData[num] && tableDic[mainType][i].Num > 0)
+            if (itemModule._ItemData.Num >= count)
             {
-                if (tableDic[mainType][i].Num > count)
-                {
-                    tableDic[mainType][i].Num -= count;
-                }
-                else
-                {
-                    tableDic[mainType][i] = null;
-                    count -= tableDic[mainType][i].Num;
-                    RemoveImageInfo(mainType, num, count);
-                }
+                itemModule._ItemData.Num -= count;
+            }
+            else if (itemModule._ItemData.Num - count == 0)
+            {
+                itemModule._ItemData.Num = 0;
+                itemModule = null;
             }
         }
     }
 
-    void AddImageInfo(ItemModule.EnumMainType mainType, int num, uint count = 1)
+
+    public void AddImageNum(ItemModule.ItemData itemData, ItemModule.EnumMainType mainType, uint count = 1)
     {
-        for (int i = 0; i < 25; i++)
+        Debug.Log(itemData);
+
+        if (itemData.Num < 20)
         {
-            if (count <= 0)
-                return;
-            if ((tableDic[mainType][i] == _itemData[num] && tableDic[mainType][i].Num < tableDic[mainType][i].OverlayNum) || tableDic[mainType][i] == null)
+            itemData.Num += count;
+        }
+        else
+        {
+            for (int i = 0; i < tableDic[mainType].Length; i++)
             {
-                tableDic[mainType][i] = _itemData[num];
-                if (tableDic[mainType][i].Num + count <= tableDic[mainType][i].OverlayNum)
+
+                if (tableDic[mainType][i]._ItemData.Id == itemData.Id && tableDic[mainType][i]._ItemData.Num < 20)
                 {
-                    tableDic[mainType][i].Num += count;
+                    //tableDic[mainType][i].AddImageNum();
+                    AddImageNum(tableDic[mainType][i]._ItemData, mainType);
                     return;
                 }
-                else
-                {
-                    count = (count + tableDic[mainType][i].Num) - tableDic[mainType][i].OverlayNum;
-                    tableDic[mainType][i].Num = tableDic[mainType][i].OverlayNum;
-                }
+
             }
+            for (int i = 0; i < tableDic[mainType].Length; i++)
+            {
+
+                if (tableDic[mainType][i] == null)
+                {
+                    tableDic[mainType][i] = new ItemModule() { _ItemData = MethodExtension.DeepClone<ItemModule.ItemData>(itemData) };
+                    tableDic[mainType][i]._ItemData.Num = count;
+                    return;
+                }
+
+            }
+            
         }
+        
     }
 
     public int SetTableCount(ItemModule.EnumMainType mainType)
@@ -63,7 +93,7 @@ public class BagUIModule : BaseModule
         int count = 0;
         foreach (var item in tableDic[mainType])
         {
-            if (item != null && item.Num != 0)
+            if (item != null && item._ItemData.Num != 0)
             {
                 count++;
                 //Debug.Log(item);
@@ -77,7 +107,7 @@ public class BagUIModule : BaseModule
     {
 
         AutoRegister = true;
-        _itemData = new List<ItemModule.ItemData>();
+        _itemData = new List<ItemModule>();
         tableDic.Add(ItemModule.EnumMainType.None, null);
         tableDic.Add(ItemModule.EnumMainType.ItemOne, tableOneListItem);
         tableDic.Add(ItemModule.EnumMainType.ItemTwo, tableTwoListItem);
@@ -106,13 +136,19 @@ public class BagUIModule : BaseModule
             //Debug.Log(num);
             for (int i = 0; i < num; i++)
             {
-                ItemModule.ItemData itemModile = _itemData[UnityEngine.Random.Range(0, _itemData.Count)];
+                ItemModule.ItemData itemModile = _itemData[UnityEngine.Random.Range(0, _itemData.Count)]._ItemData;
                 //tableDic[temp][i] = itemModile;
-                tableDic[temp][i] = MethodExtension.DeepClone<ItemModule.ItemData>(itemModile);
+                //tableDic[temp][i]._ItemData = MethodExtension.DeepClone(itemModile);
+                tableDic[temp][i] = new ItemModule() { _ItemData = MethodExtension.DeepClone(itemModile) };
 
                 //Debug.Log(_listItem.Count);
 
             }
+            //for (int i = num; i < tableDic[temp].Length - num; i++)
+            //{
+            //    tableDic[temp][i] = new ItemModule() { _ItemData = new ItemModule.ItemData() };
+            //    Debug.Log(tableDic[temp][i]._ItemData == null);
+            //}
         }
     }
 
@@ -133,39 +169,39 @@ public class BagUIModule : BaseModule
     {
         //var item = new { id = 1, itemId = 10001, Num = (uint)Random.Range(300, 500), Lv = 0 };
         //1 HpBottle
-        ItemModule.ItemData item = new ItemModule.ItemData() { Id = 1, ItemId = 10001, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 };
+        ItemModule item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 1, ItemId = 10001, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 } };
         _itemData.Add(item);
 
         //2 MpBottle
-        item = new ItemModule.ItemData() { Id = 2, ItemId = 10002, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 };
+        item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 2, ItemId = 10002, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 } };
         _itemData.Add(item);
 
         //3 sword
-        item = new ItemModule.ItemData() { Id = 3, ItemId = 10003, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 };
+        item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 3, ItemId = 10003, Num = (uint)UnityEngine.Random.Range(3, 5), Lv = 0 } };
         _itemData.Add(item);
 
         //4 cloth
-        item = new ItemModule.ItemData() { Id = 4, ItemId = 10004, Num = (uint)UnityEngine.Random.Range(1, 5), Lv = (uint)UnityEngine.Random.Range(1, 10) };
+        item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 4, ItemId = 10004, Num = (uint)UnityEngine.Random.Range(1, 5), Lv = (uint)UnityEngine.Random.Range(1, 10) } };
         _itemData.Add(item);
 
         //5 gold
-        item = new ItemModule.ItemData() { Id = 5, ItemId = 10005, Num = (uint)UnityEngine.Random.Range(1, 3), Lv = 0 };
+        item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 5, ItemId = 10005, Num = (uint)UnityEngine.Random.Range(1, 3), Lv = 0 } };
         _itemData.Add(item);
 
         //5 book
-        item = new ItemModule.ItemData() { Id = 6, ItemId = 10006, Num = (uint)UnityEngine.Random.Range(1, 5), Lv = 0 };
+        item = new ItemModule() { _ItemData = new ItemModule.ItemData() { Id = 6, ItemId = 10006, Num = (uint)UnityEngine.Random.Range(1, 5), Lv = 0 } };
         _itemData.Add(item);
     }
 
-    public List<ItemModule.ItemData> GetListAllItem()
+    public List<ItemModule> GetListAllItem()
     {
         return _itemData;
     }
 
-    public List<ItemModule.ItemData> GetListByItemMainType(ItemModule.EnumMainType mainType)
+    public List<ItemModule> GetListByItemMainType(ItemModule.EnumMainType mainType)
     {//根据type相应的内容设置item的列表
         //Debug.Log("GetListByItemMainType");
-        List<ItemModule.ItemData> rtnList = new List<ItemModule.ItemData>();
+        List<ItemModule> rtnList = new List<ItemModule>();
         foreach (var temp in tableDic[mainType])
         {
             if (temp == null)
@@ -178,47 +214,6 @@ public class BagUIModule : BaseModule
     }
 
 
-
-
-
-    //#region save sprite resource temporary for current resmanger does not support Resource.Load(path,type) method
-    //private static Dictionary<string, Sprite> _dicSpritePrefab = new Dictionary<string, Sprite>();
-    //public static Sprite GetSpriteByPath(string path)
-    //{
-    //    if (_dicSpritePrefab == null)
-    //    {
-    //        _dicSpritePrefab = new Dictionary<string, Sprite>();
-    //    }
-
-    //    Sprite rtnSprite = null;
-    //    if (_dicSpritePrefab.ContainsKey(path))
-    //    {
-    //        rtnSprite = _dicSpritePrefab[path];
-    //    }
-    //    else
-    //    {
-    //        UnityEngine.Object obj = Resources.Load(path, typeof(Sprite));
-    //        if (obj == null)
-    //        {
-    //            Debug.Log("sprite path is not correct!! path:" + path);
-    //        }
-    //        else
-    //        {
-    //            rtnSprite = obj as Sprite;
-    //            if (rtnSprite != null)
-    //            {
-    //                _dicSpritePrefab.Add(path, rtnSprite);
-    //            }
-    //            else
-    //            {
-    //                Debug.Log("sprite type not correct!! path:" + path);
-    //            }
-    //        }
-    //    }
-
-    //    return rtnSprite;
-    //}
-    //#endregion
 }
 
 //raw setting data

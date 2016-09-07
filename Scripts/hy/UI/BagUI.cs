@@ -63,9 +63,30 @@ class BagUI : BaseUI
 
         _toggleThree = _tabThree.GetComponent<Toggle>();
         _toggleThree.onValueChanged.AddListener((isOn) => { OnToggleValueChanged(_toggleThree, isOn); });
-
+        MessageCenter.Instance.AddListener(MessageType.Net_MessageItem.ToString(), ItemModuleMessage);
 
     }
+
+
+
+    private void ItemModuleMessage(Message message)
+    {
+        switch (message.Content.ToString())
+        {
+            case "Add":
+                Debug.Log("AddImageNum");
+                _bagUIModule.AddImageNum((ItemModule.ItemData)message["Add"], mainType);
+                break;
+            case "Decrease":
+                _bagUIModule.DecreaseImageNum((ItemModule)message["Decrease"], mainType);
+                Debug.Log("Decrease");
+                break;
+            default:
+                break;
+        }
+        SetData();
+    }
+
     protected override void OnLoadData()
     {
         base.OnLoadData();
@@ -167,7 +188,7 @@ class BagUI : BaseUI
     {
         //Debug.Log("SetData");
         _isSettingData = true;
-        List<ItemModule.ItemData> listItem = null;
+        List<ItemModule> listItem = null;
 
         if (_toggleTwo.isOn)
             mainType = ItemModule.EnumMainType.ItemTwo;
@@ -228,7 +249,7 @@ class BagUI : BaseUI
         
     }
 
-    private void ShowAllImage(List<ItemModule.ItemData> listItem)
+    private void ShowAllImage(List<ItemModule> listItem)
     {
 
         for (int i = 0; i < _listItem.Count; i++)

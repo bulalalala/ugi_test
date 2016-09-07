@@ -42,11 +42,11 @@ namespace XHFrameWork
 			handleParams = _params;
 		}
 
-		public void CallEventHandle(GameObject _lsitener, object _args)
+		public void CallEventHandle(GameObject _lsitener, object _args, object button = null)
 		{
 			if (null != eventHandle)
 			{
-				eventHandle(_lsitener, _args, handleParams);
+                eventHandle(_lsitener, _args, button,handleParams);
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace XHFrameWork
 		public void OnPointerClick (PointerEventData eventData)
 		{
 			if (onClick != null) 
-				onClick.CallEventHandle(this.gameObject, eventData);
+				onClick.CallEventHandle(this.gameObject, eventData, eventData.button);
 		}
 		#endregion
 		

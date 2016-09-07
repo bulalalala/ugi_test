@@ -96,12 +96,12 @@ namespace XHFrameWork
 		/// </summary>
 		/// <param name="name">Name.</param>
 		/// <param name="sender">Sender.</param>
-		public Message (string name, object sender)
-		{
-			Name = name;
-			Sender = sender;
-			Content = null;
-		}
+		//public Message (string name, object sender)
+		//{
+		//	Name = name;
+		//	Sender = sender;
+		//	Content = null;
+		//}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="XHFrameWork.Message"/> class.
@@ -109,12 +109,12 @@ namespace XHFrameWork
 		/// <param name="name">Name.</param>
 		/// <param name="sender">Sender.</param>
 		/// <param name="content">Content.</param>
-		public Message (string name, object sender, object content)
-		{
-			Name = name;
-			Sender = sender;
-			Content = content;
-		}
+		//public Message (string name, object sender, object content = null)
+		//{
+		//	Name = name;
+		//	Sender = sender;
+		//	Content = content;
+		//}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="XHFrameWork.Message"/> class.
@@ -123,7 +123,7 @@ namespace XHFrameWork
 		/// <param name="sender">Sender.</param>
 		/// <param name="content">Content.</param>
 		/// <param name="_dicParams">_dic parameters.</param>
-		public Message (string name, object sender, object content, params object[] _dicParams)
+		public Message (string name, object sender, object content = null , params object[] _dicParams)
 		{
 			Name = name;
 			Sender = sender;

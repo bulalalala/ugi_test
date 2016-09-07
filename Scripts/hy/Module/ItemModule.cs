@@ -28,7 +28,7 @@ public class ItemModule : BaseModule
         Debug.Log("OnLoad");
         //StartCoroutine----MonoBehaviour
         //_interface.StartCoroutine(AutoUpdateItem());//NullReferenceException,继承自Mono的类，都无法使用new创建，只能使用创建的GameObject通过GetComponent<>()方法获得脚本
-        CoroutineController.Instance.StartCoroutine(AutoUpdateItem());
+        //CoroutineController.Instance.StartCoroutine(AutoUpdateItem());
     }
 
     protected override void OnRelease()
@@ -40,60 +40,52 @@ public class ItemModule : BaseModule
 
     #endregion
 
-    private IEnumerator AutoUpdateItem()
-    {
-        //int gold = 0;
-        while (true)
-        {
-            //    gold++;
-            yield return _itemModule;
-            if (isChanged)
-            {
-                Message message = new Message(MessageType.Net_MessageItem.ToString(), this);
-                message["Item"] = _itemModule;
-                MessageCenter.Instance.SendMessage(message);
-                isChanged = false;
-            }
-            
-            //Debug.Log("AutoUpdateItem");
-        }
-    }
+    //private void AutoUpdateItem(string name)
+    //{
+
+    //    Message message = new Message(MessageType.Net_MessageItem.ToString(), _ItemData,name);
+    //    message[name] = _ItemData;
+    //    MessageCenter.Instance.SendMessage(message);
+
+    //}
 
 
-    public void RemoveImageNum(uint count = 1)
-    {
-        if (_ItemData.Num > 0)
-        {
-            if (_ItemData.Num >= count)
-            {
-                _ItemData.Num -= count;
-            }
-            else if (_ItemData.Num - count == 0)
-            {
-                _itemModule._ItemData = null;
-                _ItemData.Num = 0;
-            }
-            else
-            {
-                Debug.Log("num is not enough!");
-            }
-        }
-        isChanged = true;
-        //Debug.Log(_ItemData.Num);
-    }
+    //public void RemoveImageNum(uint count = 1)
+    //{
+    //    if (_ItemData.Num > 0)
+    //    {
+    //        if (_ItemData.Num >= count)
+    //        {
+    //            _ItemData.Num -= count;
+    //        }
+    //        else if (_ItemData.Num - count == 0)
+    //        {
+    //            _ItemData.Num = 0;
+    //            AutoUpdateItem("RemoveImageNum");
 
-    public void AddImageNum(uint count = 1)
-    {
-        if (_ItemData.Num < _ItemData.OverlayNum)
-        {
-            _ItemData.Num += count;
-        }
-        else
-        {
-            Debug.Log("num is overfllow");
-        }
-        isChanged = true;
-    }
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("num is not enough!");
+    //        }
+    //    }
+    //    isChanged = true;
+    //    //Debug.Log(_ItemData.Num);
+    //}
+
+
+    //public void AddImageNum(uint count = 1)
+    //{
+    //    if (_ItemData.Num < 20)
+    //    {
+    //        _ItemData.Num += count;
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("num is overfllow");
+    //        AutoUpdateItem("AddImageNum");
+    //    }
+    //}
     [Serializable]
     public class ItemData 
     {

@@ -3,13 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 using XHFrameWork;
 using System;
+using UnityEngine.EventSystems;
 
 public class Item : BaseUI
 {
     private ItemModule _itemModule = new ItemModule();
     Image _image ;
     BagUI _bagui;
-    KeyCode currentKey;
     #region implemented abstract members of BaseUI
     public override EnumUIType GetUIType()
     {
@@ -47,18 +47,18 @@ public class Item : BaseUI
 	}
 
 
-    public void SetItemData(ItemModule.ItemData item, uint setNum = 1)
+    public void SetItemData(ItemModule item, uint setNum = 1)
     {
         //Debug.Log("SetItemData");
-        _itemModule._ItemData = item;
+        _itemModule = item;
 
-        if (_itemModule._ItemData == null || _itemModule._ItemData.Num == 0)
+        if (_itemModule == null || _itemModule._ItemData.Num == 0)
         {
             if (!_image.enabled && TextItemNum.enabled)
                 return;
             else
             {
-                _itemModule._ItemData = null;
+                _itemModule = null;
                 _image.enabled = false;
                 TextItemNum.enabled = false;
                 EventTriggerListener.Get(ImgItem.gameObject).RemoveAllHandle();
@@ -72,7 +72,6 @@ public class Item : BaseUI
             TextItemNum.text = _itemModule._ItemData.Num.ToString();
             TextItemNum.enabled = true;
             EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnClick, UseItem);
-            EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnDoubleClick, AddItem);
         }
     }
 
@@ -80,21 +79,19 @@ public class Item : BaseUI
     protected override void OnAwake()
     {
         base.OnAwake();
-        currentKey = KeyCode.Space;
-        MessageCenter.Instance.AddListener("AutoUpdateItem", ItemMessage);
+        //MessageCenter.Instance.AddListener("AutoUpdateItem", ItemMessage);
         //_image = transform.FindChild("Image").GetComponent<Image>();
         _image = ImgItem.transform.FindChild("Image").GetComponent<Image>();
         EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnClick, UseItem);
-        EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnDoubleClick, AddItem);
         //_image = ImgItem.transform.GetComponentInChildren<Image>();
         //Debug.Log("OnAwake");
         _bagui = GameObject.Find("Canvas(Clone)/bgImage/RightArea/Panel/BagUI(Clone)").GetComponent<BagUI>();
     }
 
-    private void ItemMessage(Message message)
-    {
-        SetItemData((ItemModule.ItemData)message["Item"]);
-    }
+    //private void ItemMessage(Message message)
+    //{
+    //    SetItemData((ItemModule.ItemData)message["Item"]);
+    //}
 
     protected override void OnLoadData()
     {
@@ -121,28 +118,25 @@ public class Item : BaseUI
     private void UseItem(GameObject _listener, object _args, params object[] _params)
     //private void UseItem()
     {
-        Debug.Log(Event.current);
-        Event e = Event.current;
-        if (e.isKey)
-        {
-            currentKey = e.keyCode;
-            Debug.Log("Current Key is : " + currentKey.ToString());
-        }
-        //if (Input.GetButton("Fire1"))
-        //{
-        //    Debug.Log("left");
-        //}
-        //Debug.Log(_args);
-        _itemModule.RemoveImageNum();
-        _bagui.SetData();
-        //}
-    }
-    private void AddItem(GameObject _listener, object _args, object[] _params)
-    {
-        _itemModule.AddImageNum();
-        _bagui.SetData();
+        if (_params[0].ToString() == "Left")
+            AutoUpdateItem("Add", _itemModule._ItemData);
+        //_itemModule.RemoveImageNum();
+        else if (_params[0].ToString() == "Right")
+            AutoUpdateItem("Decrease",_itemModule);
+            //_itemModule.AddImageNum();
+
+        //_bagui.SetData();
+
     }
 
+    private void AutoUpdateItem(string name, object sender)
+    {
+
+        Message message = new Message(MessageType.Net_MessageItem.ToString(), sender, name);
+        message[name] = sender;
+        MessageCenter.Instance.SendMessage(message);
+
+    }
     #endregion
 
 }
