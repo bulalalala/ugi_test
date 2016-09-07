@@ -40,52 +40,7 @@ public class ItemModule : BaseModule
 
     #endregion
 
-    //private void AutoUpdateItem(string name)
-    //{
-
-    //    Message message = new Message(MessageType.Net_MessageItem.ToString(), _ItemData,name);
-    //    message[name] = _ItemData;
-    //    MessageCenter.Instance.SendMessage(message);
-
-    //}
-
-
-    //public void RemoveImageNum(uint count = 1)
-    //{
-    //    if (_ItemData.Num > 0)
-    //    {
-    //        if (_ItemData.Num >= count)
-    //        {
-    //            _ItemData.Num -= count;
-    //        }
-    //        else if (_ItemData.Num - count == 0)
-    //        {
-    //            _ItemData.Num = 0;
-    //            AutoUpdateItem("RemoveImageNum");
-
-    //        }
-    //        else
-    //        {
-    //            Debug.Log("num is not enough!");
-    //        }
-    //    }
-    //    isChanged = true;
-    //    //Debug.Log(_ItemData.Num);
-    //}
-
-
-    //public void AddImageNum(uint count = 1)
-    //{
-    //    if (_ItemData.Num < 20)
-    //    {
-    //        _ItemData.Num += count;
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("num is overfllow");
-    //        AutoUpdateItem("AddImageNum");
-    //    }
-    //}
+   
     [Serializable]
     public class ItemData 
     {

@@ -15,25 +15,6 @@ public class BagUIModule : BaseModule
     private ItemModule[] tableThreeListItem = new ItemModule[25];
 
 
-    //public void RemoveImageInfo(ItemModule.EnumMainType mainType, int num, uint count = 1)
-    //{
-    //    for (int i = 0; i < 25; i++)
-    //    {
-    //        if (tableDic[mainType][i] == _itemData[num] && tableDic[mainType][i].Num > 0)
-    //        {
-    //            if (tableDic[mainType][i].Num > count)
-    //            {
-    //                tableDic[mainType][i].Num -= count;
-    //            }
-    //            else
-    //            {
-    //                tableDic[mainType][i] = null;
-    //                count -= tableDic[mainType][i].Num;
-    //                RemoveImageInfo(mainType, num, count);
-    //            }
-    //        }
-    //    }
-    //}
     public void DecreaseImageNum(ItemModule itemModule, ItemModule.EnumMainType mainType, uint count = 1)
     {
         if (itemModule._ItemData.Num > 0)
@@ -63,10 +44,11 @@ public class BagUIModule : BaseModule
         {
             for (int i = 0; i < tableDic[mainType].Length; i++)
             {
-
-                if (tableDic[mainType][i]._ItemData.Id == itemData.Id && tableDic[mainType][i]._ItemData.Num < 20)
+                Debug.Log(tableDic[mainType].Length);
+                if (tableDic[mainType][i] == null)
+                    continue;
+                else if (tableDic[mainType][i]._ItemData.Id == itemData.Id && tableDic[mainType][i]._ItemData.Num < 20)
                 {
-                    //tableDic[mainType][i].AddImageNum();
                     AddImageNum(tableDic[mainType][i]._ItemData, mainType);
                     return;
                 }
