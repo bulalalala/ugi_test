@@ -17,6 +17,8 @@ class BagUI : BaseUI
     private readonly string ITEM_PREFAB_PATH = "Prefabs/Imgae_Item";
     private readonly string ITEM_PANEL_PATH = "Canvas(Clone)/bgImage/RightArea/Panel/BagUI(Clone)";
 
+
+
     private readonly int ITEM_COUNT_PER_SHEET = 5 * 3;
 
     private BagUIModule _bagUIModule;
@@ -35,6 +37,9 @@ class BagUI : BaseUI
     private Toggle _toggleOne;
     private Toggle _toggleTwo;
     private Toggle _toggleThree;
+
+
+
 
     #region implemented abstract members of BaseUI
     public override EnumUIType GetUIType()
@@ -68,25 +73,6 @@ class BagUI : BaseUI
     }
 
 
-
-    private void ItemModuleMessage(Message message)
-    {
-        switch (message.Content.ToString())
-        {
-            case "Add":
-                Debug.Log("AddImageNum");
-                _bagUIModule.AddImageNum((ItemModule.ItemData)message["Add"], mainType);
-                break;
-            case "Decrease":
-                _bagUIModule.DecreaseImageNum((ItemModule)message["Decrease"], mainType);
-                Debug.Log("Decrease");
-                break;
-            default:
-                break;
-        }
-        SetData();
-    }
-
     protected override void OnLoadData()
     {
         base.OnLoadData();
@@ -109,6 +95,32 @@ class BagUI : BaseUI
         _listToggleSheet = null;
     }
     #endregion
+
+    #region LeftArea
+
+
+
+    #endregion
+
+    #region rightArea
+    private void ItemModuleMessage(Message message)
+    {
+        switch (message.Content.ToString())
+        {
+            case "Add":
+                //Debug.Log("AddImageNum");
+                _bagUIModule.AddImageNum((ItemModule.ItemData)message["Add"], mainType);
+                break;
+            case "Decrease":
+                _bagUIModule.DecreaseImageNum((ItemModule)message["Decrease"], mainType);
+                //Debug.Log("Decrease");
+                break;
+            default:
+                break;
+        }
+        SetData();
+    }
+
 
     private void OnToggleValueChanged(Toggle sender, bool isOn)
     {
@@ -267,6 +279,8 @@ class BagUI : BaseUI
         
     }
     
+    #endregion
+
     #endregion
 
 

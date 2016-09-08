@@ -6,7 +6,6 @@ using System;
 
 public class ItemModule : BaseModule
 {
-    ItemModule _itemModule;
     public ItemData _ItemData;
     bool isChanged = true;
     public enum EnumMainType
@@ -25,7 +24,7 @@ public class ItemModule : BaseModule
     protected override void OnLoad()
     {
         base.OnLoad();
-        Debug.Log("OnLoad");
+        //Debug.Log("OnLoad");
         //StartCoroutine----MonoBehaviour
         //_interface.StartCoroutine(AutoUpdateItem());//NullReferenceException,继承自Mono的类，都无法使用new创建，只能使用创建的GameObject通过GetComponent<>()方法获得脚本
         //CoroutineController.Instance.StartCoroutine(AutoUpdateItem());
@@ -35,7 +34,6 @@ public class ItemModule : BaseModule
     {
         base.OnRelease();
         _ItemData = null;
-        _itemModule = null;
     }
 
     #endregion

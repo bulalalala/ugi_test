@@ -87,6 +87,7 @@ namespace XHFrameWork
         BagUI,
         CanvasRoot,
         Item,
+        Character,
 
     }
 
@@ -181,6 +182,9 @@ namespace XHFrameWork
                 break;
             case EnumUIType.CanvasRoot:
                 _path = UI_PREFAB + "Canvas";
+                break;
+                case EnumUIType.Character:
+                _path = UI_PREFAB + "LeftArea";
                 break;
 			default:
 				Debug.Log("Not Find EnumUIType! type: " + _uiType.ToString());

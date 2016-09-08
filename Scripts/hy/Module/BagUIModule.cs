@@ -10,9 +10,9 @@ public class BagUIModule : BaseModule
     //int?[] tableOneID = new int?[25];//0-5的值，是数组_listItem的编号；
     //int?[] tableTwoID = new int?[25];
     //int?[] tableThreeID = new int?[25];
-    private ItemModule[] tableOneListItem = new ItemModule[25];
-    private ItemModule[] tableTwoListItem = new ItemModule[25];
-    private ItemModule[] tableThreeListItem = new ItemModule[25];
+    private ItemModule[] tableOneListItem = new ItemModule[15];
+    private ItemModule[] tableTwoListItem = new ItemModule[15];
+    private ItemModule[] tableThreeListItem = new ItemModule[15];
 
 
     public void DecreaseImageNum(ItemModule itemModule, ItemModule.EnumMainType mainType, uint count = 1)
@@ -34,7 +34,7 @@ public class BagUIModule : BaseModule
 
     public void AddImageNum(ItemModule.ItemData itemData, ItemModule.EnumMainType mainType, uint count = 1)
     {
-        Debug.Log(itemData);
+        //Debug.Log(itemData);
 
         if (itemData.Num < 20)
         {
@@ -44,7 +44,7 @@ public class BagUIModule : BaseModule
         {
             for (int i = 0; i < tableDic[mainType].Length; i++)
             {
-                Debug.Log(tableDic[mainType].Length);
+                //Debug.Log("==");
                 if (tableDic[mainType][i] == null)
                     continue;
                 else if (tableDic[mainType][i]._ItemData.Id == itemData.Id && tableDic[mainType][i]._ItemData.Num < 20)
@@ -56,8 +56,8 @@ public class BagUIModule : BaseModule
             }
             for (int i = 0; i < tableDic[mainType].Length; i++)
             {
-
-                if (tableDic[mainType][i] == null)
+                //Debug.Log("addNull");
+                if (tableDic[mainType][i] == null || tableDic[mainType][i]._ItemData.Num == 0)
                 {
                     tableDic[mainType][i] = new ItemModule() { _ItemData = MethodExtension.DeepClone<ItemModule.ItemData>(itemData) };
                     tableDic[mainType][i]._ItemData.Num = count;

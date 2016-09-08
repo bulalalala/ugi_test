@@ -34,7 +34,7 @@ namespace XHFrameWork
 
 		public void AddListener(string messageName, MessageEvent messageEvent)
 		{
-			Debug.Log("AddListener Name : " + messageName);
+            //Debug.Log("AddListener Name : " + messageName);
 			List<MessageEvent> list = null;
 			if (dicMessageEvents.ContainsKey(messageName))
 			{

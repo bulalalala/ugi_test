@@ -72,7 +72,13 @@ public class Item : BaseUI
             TextItemNum.text = _itemModule._ItemData.Num.ToString();
             TextItemNum.enabled = true;
             EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnClick, UseItem);
+            EventTriggerListener.Get(_imgItem.gameObject).SetEventHandle(EnumTouchEventType.OnDrag, DragItem);
         }
+    }
+
+    private void DragItem(GameObject _listener, object _args, params object[] _params)
+    {
+        Debug.Log(_listener);
     }
 
     #region override method

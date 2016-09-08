@@ -230,10 +230,12 @@ namespace XHFrameWork
                         _uiObject = MonoBehaviour.Instantiate(_prefabObj) as GameObject;
                         if (loadPath != null)
                         {
-                            Vector3 temp = _uiObject.transform.localScale;
+                            Vector3 rotTemp = _uiObject.transform.localScale;
+                            Vector3 posTem = _uiObject.transform.localPosition;
                             _uiObject.transform.parent = GameObject.Find(loadPath).transform;//加载预制件的路径
                             //_uiObject.transform.
-                            _uiObject.transform.localScale = temp;
+                            _uiObject.transform.localScale = rotTemp;
+                            _uiObject.transform.localPosition = posTem;
                         }
                         _uiObject.transform.localPosition = new Vector3();
                         BaseUI _baseUI = _uiObject.GetComponent<BaseUI>();
